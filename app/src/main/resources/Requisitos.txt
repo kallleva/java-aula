@@ -1,0 +1,43 @@
+Sistema de contas bancárias
+
+
+personas 
+- Cliente: Pessoa que possui uma conta bancária e realiza transações financeiras, como depósitos, saques e transferências.
+- software: Sistema de gerenciamento de contas bancárias que permite aos clientes acessar suas contas, visualizar saldos, realizar transações 
+
+
+regras de negócio
+o banco tem que validar as transações realizadas pelos clientes, garantindo que não haja inconsistências nos saldos das contas.
+o banco nao podera realizar transações que resultem em saldo negativo
+o banco nao podera enviar transações para contas inexistentes
+o banco nao podera enviar transação que nao for de um cliente registrado no sistema
+o banco nao podera fazer uma transação alterando contas de outro cliente sem ser a dele mesmo
+
+
+o cliente deve ser capaz de visualizar o saldo da sua conta a qualquer momento.
+o cliente deve ser capaz de realizar depósitos, saques e transferências para outras contas.
+o cliente podera ser capas de visualizar o histórico de transações realizadas em sua conta.
+o cliente podera cancelar uma transação realizada, desde que a mesma ainda não tenha sido processada pelo banco.
+
+
+
+cliente 
+    - ID: Identificador único do cliente
+    - Nome: Nome completo do cliente
+    - CPF: Cadastro de Pessoa Física do cliente
+    - Conta: Referência à conta bancária do cliente
+
+
+conta-bancaria
+    - ID: Identificador único da conta bancária
+    - Saldo: Valor atual disponível na conta
+    - ClienteID: Referência ao cliente proprietário da conta
+
+histórico-transações
+    - ID: Identificador único da transação
+    - Tipo: Tipo de transação (depósito, saque, transferência)
+    - Valor: Valor da transação
+    - ContaID: Referência à conta envolvida na transação
+    - contaDestinoID: Referência à conta de destino (apenas para transferências)
+
+
