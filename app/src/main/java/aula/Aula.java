@@ -6,6 +6,7 @@ package aula;
 
 import aula.Models.Cliente;
 import aula.Models.Conta;
+import aula.Models.Historico;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -15,10 +16,12 @@ public class Aula {
     static Scanner input = new Scanner(System.in);
     static ArrayList<Conta> contasBancarias;
     static ArrayList<Cliente> clientes;
+    static ArrayList<Historico> historico;
 
     public static void main(String[] args) {
         contasBancarias = new ArrayList<Conta>();
         clientes = new ArrayList<Cliente>();
+        historico = new ArrayList<Historico>();
         operacoesBancarias();
     }
 
@@ -34,8 +37,9 @@ public class Aula {
         System.out.println("|   Opção 2 - Depositar     |");
         System.out.println("|   Opção 3 - Sacar         |");
         System.out.println("|   Opção 4 - Transferir    |");
-        System.out.println("|   Opção 5 - Listar        |");
-        System.out.println("|   Opção 6 - Sair          |");
+        System.out.println("|   Opção 5 - Listar contas |");
+        System.out.println("|   Opção 6 - Histórico     |");
+        System.out.println("|   Opção 7 - Sair          |");
 
         int operacao = input.nextInt();
 
@@ -55,6 +59,22 @@ public class Aula {
             
             case 4:
                 transferir();
+                break;
+
+            case 5:
+                listarContas();
+                break;
+
+            case 6:
+                listarHistorico();
+                break;
+
+            case 7:
+                System.out.println("Obrigado por utilizar nosso banco!");
+                return;
+
+            default:
+                System.out.println("Operação inválida.");
                 break;
         }
 
@@ -118,6 +138,7 @@ public class Aula {
             return;
         } else {
             contaOrigem.transferir(contaDestino, valorTransferencia);
+            registrarHistorico("TRANSFERENCIA", valorTransferencia, contaOrigem, contaDestino);
             System.out.println("Transferência realizada com sucesso! Novo saldo da conta de origem: " + contaOrigem.getSaldo());
         }
         
@@ -159,6 +180,7 @@ public class Aula {
             return;
         } else {
             conta.sacar(valorSaque);
+            registrarHistorico("SAQUE", valorSaque, conta, null);
             System.out.println("Saque realizado com sucesso! Novo saldo: " + conta.getSaldo());
         }
 
@@ -193,8 +215,49 @@ public class Aula {
         System.out.println("Digite o valor do depósito: ");
         double valorDeposito = input.nextDouble();
         conta.depositar(valorDeposito);
+        registrarHistorico("DEPOSITO", valorDeposito, conta, null);
         System.out.println("Depósito realizado com sucesso! Novo saldo: " + conta.getSaldo());
       }
+
+    private static void registrarHistorico(String tipo, double valor, Conta conta, Conta contaDestino) {
+        String id = String.valueOf(historico.size() + 1);
+        String contaId = String.valueOf(conta.getId());
+        String contaDestinoId = contaDestino == null ? null : String.valueOf(contaDestino.getId());
+        historico.add(new Historico(id, tipo, valor, contaId, contaDestinoId));
+    }
+
+    private static void listarHistorico() {
+        if (historico.isEmpty()) {
+            System.out.println("Nenhuma transação registrada.");
+            return;
+        }
+
+        System.out.println("\n---------------- HISTÓRICO DE TRANSAÇÕES ----------------");
+        for (Historico transacao : historico) {
+            String destino = transacao.getContaDestinoId() == null
+                    ? "-"
+                    : transacao.getContaDestinoId();
+            System.out.println("ID: " + transacao.getId()
+                    + " | Tipo: " + transacao.getTipo()
+                    + " | Valor: " + transacao.getValor()
+                    + " | Conta: " + transacao.getContaId()
+                    + " | Destino: " + destino);
+        }
+    }
+
+    private static void listarContas() {
+        if (contasBancarias.isEmpty()) {
+            System.out.println("Nenhuma conta cadastrada.");
+            return;
+        }
+
+        System.out.println("\n---------------- CONTAS BANCÁRIAS ----------------");
+        for (Conta conta : contasBancarias) {
+            System.out.println("ID: " + conta.getId()
+                    + " | Titular: " + conta.getCliente().getNome()
+                    + " | Saldo: " + conta.getSaldo());
+        }
+    }
 
 
 
@@ -235,9 +298,6 @@ public class Aula {
 
 
         // se ele ja tiver uma conta, nao posso criar outra
-        boolean clienteJaPossuiConta = false;
-        Conta conta = null;
-        
         if (contasBancarias.isEmpty()){
             Conta novaConta = new Conta(1, 0.0, cliente);
             contasBancarias.add(novaConta);
@@ -248,7 +308,6 @@ public class Aula {
             for (Conta contasBancaria : contasBancarias) {
                 if (contasBancaria.getCliente().getCpf().equals(cpf)) {
                     System.out.println("O cliente já possui uma conta.");
-                    clienteJaPossuiConta = true;
                     return;
                 }
             }
