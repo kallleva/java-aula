@@ -67,8 +67,43 @@ public class Aula {
                 case 7 -> {
                     System.out.println("Obrigado por utilizar o Kalleb Bank!");
                     rodando = false;
+                    continue;
                 }
-                default -> System.out.println("Opção inválida. Tente novamente.");
+                default -> {
+                    System.out.println("Opção inválida. Tente novamente.");
+                    continue;
+                }
+            }
+
+            // Pergunta se o usuário quer realizar outra operação após cada opção (1 a 6)
+            if (!desejaContinuar()) {
+                System.out.println("Obrigado por utilizar o Kalleb Bank!");
+                rodando = false;
+            }
+        }
+    }
+
+    /**
+     * Pergunta ao usuário se deseja continuar realizando operações.
+     * 
+     * CORREÇÃO DOS ERROS:
+     * 1. String vs char: 'S' e 'N' (com aspas simples) são 'char'. resposta é String. Deve-se usar "S" (aspas duplas) e .equalsIgnoreCase().
+     * 2. Operador lógico: O operador '&' é bitwise. Para comparações lógicas usamos '&&' (E) e '||' (OU).
+     * 3. Repetição: Usa um laço while para continuar perguntando até o usuário digitar 'S' ou 'N'.
+     *
+     * @return true se o usuário digitar 'S', false se digitar 'N'
+     */
+    private static boolean desejaContinuar() {
+        while (true) {
+            System.out.print("\nDeseja realizar outra operação? (S para SIM / N para NÃO): ");
+            String resposta = input.nextLine().trim();
+
+            if (resposta.equalsIgnoreCase("S")) {
+                return true;
+            } else if (resposta.equalsIgnoreCase("N")) {
+                return false;
+            } else {
+                System.out.println("⚠️ Opção inválida! Digite 'S' para SIM ou 'N' para NÃO.");
             }
         }
     }
@@ -235,6 +270,7 @@ public class Aula {
                     Utils.formatarNumero(conta.getSaldo()));
         }
     }
+
 
     /**
      * OPÇÃO 6: LISTAR HISTÓRICO
