@@ -1,6 +1,7 @@
 package aula.Models;
 
 public class Cliente {
+
     private String nome;
     private String email;
     private String cpf;
@@ -9,7 +10,6 @@ public class Cliente {
         this.nome = nome;
         this.email = email;
         this.cpf = cpf;
-
     }
 
     public String getNome() {
@@ -35,7 +35,4 @@ public class Cliente {
     public void setCpf(String cpf) {
         this.cpf = cpf;
     }
-
 }
-
-
